@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>App-positionkeeper by VoltDB</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>App-positionkeeper</h1>
+        <p>Track portfolio position and monitor margin risk, updating with every trade or component price change</p>
+
+        <p class="view"><a href="https://github.com/VoltDB/app-positionkeeper">View the Project on GitHub <small>VoltDB/app-positionkeeper</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/VoltDB/app-positionkeeper/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/VoltDB/app-positionkeeper/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/VoltDB/app-positionkeeper">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="toy-position-keeper-instructions" class="anchor" href="#toy-position-keeper-instructions"><span class="octicon octicon-link"></span></a>TOY POSITION KEEPER INSTRUCTIONS</h1>
+
+<ol>
+<li>Install VoltDB on the server(s) where the database will run.  Instructions are provided here (<a href="http://voltdb.com/docs/UsingVoltDB/installDist.php">http://voltdb.com/docs/UsingVoltDB/installDist.php</a>).</li>
+</ol><p>1a. If you install with a .tar.gz file, do one fo the following so that the toy position keeper scripts know where VoltDB is installed:</p>
+
+<ul>
+<li>
+<p>adding the voltdb-3.0/bin directory to your PATH like this:</p>
+
+<p>export PATH="$PATH:/opt/voltdb-3.0/bin"</p>
+</li>
+<li>
+<p>or, set VOLTDB_HOME as an environment variable:</p>
+
+<p>export VOLTDB_HOME="/opt/voltdb-3.0"</p>
+</li>
+</ul><p>1b. If you installed using the Debian package, the bin folder is already added to the PATH.</p>
+
+<ol>
+<li>
+<p>Start the database</p>
+
+<p>Open a Terminal window and run:</p>
+
+<p>cd position_keeper/db
+./run.sh</p>
+
+<p>(keep this window open)</p>
+</li>
+<li>
+<p>Run Scenario 1:</p>
+
+<p>Open a separate terminal window or tab and run:</p>
+
+<p>cd position_keeper/client
+./run.sh scenario1</p>
+</li>
+<li>
+<p>Run Scenario 2:</p>
+
+<p>In the first window where the dataabase is running, use Ctrl-C to stop the database.  Then restart the database:</p>
+
+<p>./run.sh</p>
+
+<p>In a separate terminal window or tab and run:</p>
+
+<p>cd position_keeper/client
+./run.sh scenario2</p>
+</li>
+<li>
+<p>Run additional scenarios:</p>
+
+<p>Stop and restart the database using Ctrl-C and ./run.sh</p>
+
+<p>Edit the position_keeper/client/run.sh script:
+   modify any of the parameters in the scenario1 or scenario2 sections, such as:
+      - duration
+      - number of traders
+      - securities per trader</p>
+</li>
+</ol>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/VoltDB">VoltDB</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
