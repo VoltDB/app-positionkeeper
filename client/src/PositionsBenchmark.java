@@ -22,7 +22,7 @@ public class PositionsBenchmark extends BaseBenchmark {
     }
 
     public void initialize() throws Exception {
-        
+
         // EXC
         for (int e=0; e<5; e++) {
             client.callProcedure(new BenchmarkCallback("EXC.insert"),"EXC.insert",e);
@@ -137,21 +137,6 @@ public class PositionsBenchmark extends BaseBenchmark {
                              new Date());
     }
 
-    public void printResults() throws Exception {
-        
-        System.out.print("\n" + HORIZONTAL_RULE);
-        System.out.println(" Transaction Results");
-        System.out.println(HORIZONTAL_RULE);
-        BenchmarkCallback.printProcedureResults("EXC.insert");
-        BenchmarkCallback.printProcedureResults("SEC.insert");
-        BenchmarkCallback.printProcedureResults("CNT.insert");
-        BenchmarkCallback.printProcedureResults("TradeInsert");
-        BenchmarkCallback.printProcedureResults("OrderInsert");
-        BenchmarkCallback.printProcedureResults("PriceInsert");
-
-        super.printResults();
-
-    }
     
     public static void main(String[] args) throws Exception {
         BenchmarkConfig config = BenchmarkConfig.getConfig("PositionsBenchmark",args);

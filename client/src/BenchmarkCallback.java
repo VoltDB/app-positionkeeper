@@ -1,29 +1,35 @@
+/* This file is part of VoltDB.
+ * Copyright (C) 2008-2014 VoltDB Inc.
+ */
 package client;
 
-import com.google.common.collect.ConcurrentHashMultiset;
-import com.google.common.collect.Multiset;
+import java.util.*;
+import com.google_voltpatches.common.collect.ConcurrentHashMultiset;
+import com.google_voltpatches.common.collect.Multiset;
 import org.voltdb.client.ClientResponse;
 import org.voltdb.client.ProcedureCallback;
 
 public class BenchmarkCallback implements ProcedureCallback {
 
-    private static Multiset<String> stats = ConcurrentHashMultiset.create();
+    private static Multiset<String> calls = ConcurrentHashMultiset.create();
+    private static Multiset<String> commits = ConcurrentHashMultiset.create();
+    private static Multiset<String> rollbacks = ConcurrentHashMultiset.create();
+
     String procedureName;
     long maxErrors;
 
-    public static int count( String procedureName, String event ){
-        return stats.add(procedureName + event, 1);
-    }
-
-    public static int getCount( String procedureName, String event ){
-        return stats.count(procedureName + event);
-    }
-
     public static void printProcedureResults(String procedureName) {
         System.out.println("  " + procedureName);
-        System.out.println("        calls: " + getCount(procedureName,"call"));
-        System.out.println("      commits: " + getCount(procedureName,"commit"));
-        System.out.println("    rollbacks: " + getCount(procedureName,"rollback"));
+        System.out.println("        calls: " + calls.count(procedureName));
+        System.out.println("      commits: " + commits.count(procedureName));
+        System.out.println("    rollbacks: " + rollbacks.count(procedureName));
+	System.out.println();
+    }
+
+    public static void printAllResults() {
+	for (String e : calls.elementSet()) {
+	    printProcedureResults(e);
+	}
     }
 
     public BenchmarkCallback(String procedure, long maxErrors) { 
@@ -39,19 +45,20 @@ public class BenchmarkCallback implements ProcedureCallback {
     @Override
     public void clientCallback(ClientResponse cr) {
 
-        count(procedureName,"call");
+	calls.add(procedureName,1);
 
         if (cr.getStatus() == ClientResponse.SUCCESS) {
-            count(procedureName,"commit");
+	    commits.add(procedureName,1);
         } else {
-            long totalErrors = count(procedureName,"rollback");
+            long totalErrors = rollbacks.add(procedureName,1);
+
+            System.err.println("DATABASE ERROR: " + cr.getStatusString());
 
             if (totalErrors > maxErrors) {
                 System.err.println("exceeded " + maxErrors + " maximum database errors - exiting client");
                 System.exit(-1);
             }
 
-            System.err.println("DATABASE ERROR: " + cr.getStatusString());
         }
     }
 }
