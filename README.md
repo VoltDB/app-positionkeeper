@@ -1,57 +1,89 @@
-TOY POSITION KEEPER INSTRUCTIONS
-================================
+# VoltDB Example App: Position Keeper
 
-1. Install VoltDB on the server(s) where the database will run.  Instructions are provided here (http://voltdb.com/docs/UsingVoltDB/installDist.php).
+Use Case
+--------
+This application simulates a simple position keeper applicaton that maintains the positions of portfolios that are updated frequently as trades and price changes occur.
 
-1a. If you install with a .tar.gz file, do one fo the following so that the toy position keeper scripts know where VoltDB is installed:
+Code organization
+-----------------
+The code is divided into two projects:
 
-  - adding the voltdb-3.0/bin directory to your PATH like this:
+- "db": the database project, which contains the schema, stored procedures and other configurations that are compiled into a catalog and run in a VoltDB database.  
+- "client": a java client that loads a set of cards and then generates random card transactions a high velocity to simulate card activity.
 
-    export PATH="$PATH:/opt/voltdb-3.0/bin"
+See below for instructions on running these applications.  For any questions, 
+please contact fieldengineering@voltdb.com.
 
-  - or, set VOLTDB_HOME as an environment variable:
+Pre-requisites
+--------------
+Before running these scripts you need to have VoltDB 4.0 (Enterprise or Community) or later installed, and you should add the voltdb-$(VERSION)/bin directory to your PATH environment variable, for example:
 
-    export VOLTDB_HOME="/opt/voltdb-3.0"
-
-1b. If you installed using the Debian package, the bin folder is already added to the PATH.
-
-2. Start the database
-
-   Open a Terminal window and run:
-
-    cd position_keeper/db
-    ./run.sh
-
-   (keep this window open)
-
-3. Run Scenario 1:
-
-   Open a separate terminal window or tab and run:
-
-    cd position_keeper/client
-    ./run.sh scenario1
-
-4. Run Scenario 2:
-
-   In the first window where the dataabase is running, use Ctrl-C to stop the database.  Then restart the database:
-
-    ./run.sh
-
-   In a separate terminal window or tab and run:
-
-    cd position_keeper/client
-    ./run.sh scenario2
+    export PATH="$PATH:$HOME/voltdb-ent-4.0.2/bin"
 
 
-5. Run additional scenarios:
+Instructions
+------------
 
-   Stop and restart the database using Ctrl-C and ./run.sh
+1. Start the database in the background
 
-   Edit the position_keeper/client/run.sh script:
-       modify any of the parameters in the scenario1 or scenario2 sections, such as:
-          - duration
-          - number of traders
-          - securities per trader
+    ./start_db.sh
+     
+2. Run the client application
+
+    ./run_client.sh
+	
+Note: this client can only be run once, not repeatedly, or it will stop with unique constraint violations.  To run it again, the database needs to be stopped and restarted, or all of the tables need to be truncated.
+
+3. To stop the database and clean up temp files
+
+    voltadmin shutdown
+    ./clean.sh
+
+
+
+Options
+-------
+You can control various characteristics of the demo by modifying the parameters passed into the InvestmentBenchmark java application in the run_client.sh script.
+
+Speed & Duration:
+
+    --duration=120                (benchmark duration in seconds)
+    --autotune=true               (true = ignore rate limit, run at max throughput until latency is impacted)
+                                  (false = run at the specified rate limit)
+    --ratelimit=20000             (when autotune=false, run up to this rate of requests/second)
+
+Use case parameters:
+
+	--traders=1000                 (number of traders)
+	--secpercnt=10                 (number of securities each trader has in their portfolio)
+
+
+Instructions for running on a cluster
+-------------------------------------
+
+Before running this demo on a cluster, make the following changes:
+
+1. On each server, edit the start_db_cluster.sh file to set the HOST variable to the name of the **first** server in the cluster:
+    
+    HOST=voltserver01
+    
+2. On each server, edit db/deployment-cluster.xml to set hostcount to the correct number of servers:
+
+    <cluster hostcount="3" sitesperhost="8" kfactor="0" />
+	
+Also, in the same file, set the voltdbroot path to an appropriate path for your servers.
+
+4. On each server, run the start script:
+
+    ./start_db_cluster.sh
+    
+5. On one server, Edit the run_client.sh script to set the SERVERS variable to a comma-separated list of the servers in the cluster
+
+    SERVERS=voltserver01,voltserver02,voltserver03
+    
+6. Run the client script:
+
+    ./run_client.sh
 
 
 
