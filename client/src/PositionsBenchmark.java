@@ -1,3 +1,26 @@
+/* This file is part of VoltDB.
+ * Copyright (C) 2008-2015 VoltDB Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package client;
 
 import java.util.*;
@@ -15,7 +38,7 @@ public class PositionsBenchmark extends BaseBenchmark {
     // constructor
     public PositionsBenchmark(BenchmarkConfig config) {
         super(config);
-        
+
         prices = new double[numSecs];
         positions = new int[config.traders][config.secpercnt];
 
@@ -48,7 +71,7 @@ public class PositionsBenchmark extends BaseBenchmark {
             // make a list of random securities with no duplicates
             List<Integer> secs = new ArrayList<Integer>();
             while(secs.size() < config.secpercnt) {
-                int sec = rand.nextInt(numSecs); 
+                int sec = rand.nextInt(numSecs);
                 if(!secs.contains(sec))
                     secs.add(sec);
             }
@@ -82,7 +105,7 @@ public class PositionsBenchmark extends BaseBenchmark {
         // get a random trader
         int cnt = rand.nextInt(config.traders);
 
-        // retrieve the sec of one of the positions for that trader 
+        // retrieve the sec of one of the positions for that trader
         // (so the total # of positions isn't growing beyond what was intended)
         int sec = positions[cnt][rand.nextInt(config.secpercnt)];
 
@@ -90,7 +113,7 @@ public class PositionsBenchmark extends BaseBenchmark {
         double price = prices[sec] * (1+rand.nextGaussian()/100);
         // store the new price
         prices[sec] = price;
-        
+
         // insert the order with a random qty
         client.callProcedure(new BenchmarkCallback("OrderInsert"),
                              "OrderInsert",
@@ -106,7 +129,7 @@ public class PositionsBenchmark extends BaseBenchmark {
         // get a random trader
         int cnt = rand.nextInt(config.traders);
 
-        // retrieve the sec of one of the positions for that trader 
+        // retrieve the sec of one of the positions for that trader
         // (so the total # of positions is as planned)
         int sec = positions[cnt][rand.nextInt(config.secpercnt)];
 
@@ -137,7 +160,7 @@ public class PositionsBenchmark extends BaseBenchmark {
                              new Date());
     }
 
-    
+
     public static void main(String[] args) throws Exception {
         BenchmarkConfig config = BenchmarkConfig.getConfig("PositionsBenchmark",args);
 

@@ -1,3 +1,26 @@
+/* This file is part of VoltDB.
+ * Copyright (C) 2008-2015 VoltDB Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package procedures;
 
 import java.util.Date;
@@ -11,7 +34,7 @@ public class PriceInsert extends VoltProcedure {
 
     public final SQLStmt updatePos = new SQLStmt(
         "UPDATE pos SET " +
-        "  pos_prc = ?," + 
+        "  pos_prc = ?," +
         "  pos_cum_val_ord = pos_cum_qty_ord * ?," +
         "  pos_cum_val_exe = pos_cum_qty_exe * ?" +
         " WHERE codsec = ?;");
@@ -23,12 +46,12 @@ public class PriceInsert extends VoltProcedure {
                             ) throws VoltAbortException {
 
 
-        voltQueueSQL(insertPrice, 
-                     codprc, 
+        voltQueueSQL(insertPrice,
+                     codprc,
                      prc_sec,
                      prc_price,
                      prc_ts);
-        
+
         voltQueueSQL(updatePos,
                      prc_price,
                      prc_price,
